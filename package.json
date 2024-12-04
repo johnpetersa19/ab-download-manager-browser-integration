@@ -23,7 +23,7 @@
     "serve:chrome": "web-ext run -t chromium --start-url \"https://example.com\" --source-dir ./dist/chrome"
   },
   "devDependencies": {
-    "@samrum/vite-plugin-web-extension": "^5.1.0",
+    "@samrum/vite-plugin-web-extension": "^5.1.1",
     "@types/chrome": "^0.0.228",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",

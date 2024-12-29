@@ -1,19 +1,19 @@
 # AB Download Manager Browser Integration Repository
 
-> If you look for main app repository use [This Link](https://github.com/amir1376/ab-download-manager)
+> If you are looking for the main app repository, use [this link](https://github.com/amir1376/ab-download-manager).
 ## Usage
 
-In order to use this extension you need to [install](https://abdownloadmanager.com/#download) AB Download Manager
+In order to use this extension you need to [install](https://abdownloadmanager.com/#download) AB Download Manager.
 
-### This extension does the fallowing
+### This extension does the following
 
-- Add a `Download With AB DM` in browser's Context menu
-- Automatically captures download links when users want to download file from their browser
-- Show a `Download Selected` popup when user select some section of page that contains links
+- Adds a `Download With AB DM` in browser's context menu
+- Automatically captures download links when the user wants to download the file from their browser
+- Show a `Download Selected` popup when the user selects some section of the page that contains links
 
 ## How To Build
-In order to build this extension locally
-> I am developing this on `Windows` using `npm`, but it should have same result on other build environments
+In order to build this extension locally:
+> I am developing this on `Windows` using `npm`, but it should have the same result on other build environments.
 ```bash
 # install dependencies
 npm i
@@ -24,12 +24,11 @@ npm run pack:firefox
 npm run pack:chrome
 ```
 
-the output zip file will be placed under the `./dist/<browser_name>.zip` which contains the extension
-
+The output zip file containing the extension will be placed at `./dist/<browser_name>.zip`.
 
 ## Repositories And Source Code
 
-There are multiple repositories related to the **AB Download Manager** project
+There are multiple repositories related to the **AB Download Manager** project:
 
 | Repository                                                                                                 | Description                                                                   |
 |------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
@@ -39,4 +38,5 @@ There are multiple repositories related to the **AB Download Manager** project
 
 I spent a lot of time to create this project.
 
-If you like my work, Please consider giving it a ⭐ Thanks ❤️
+If you like my work, Please consider giving it a ⭐.
+Thanks ❤️

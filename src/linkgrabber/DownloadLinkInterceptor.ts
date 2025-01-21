@@ -89,19 +89,24 @@ export abstract class DownloadLinkInterceptor {
 
     protected shouldHandleRequest(details: WebRequest.OnHeadersReceivedDetailsType) {
         if (!(details.type === "main_frame" || details.type === "sub_frame")) {
+            // console.log("capture_error","frame type is not captured",details.type)
             return false
         }
         if (details.method !== "GET") {
+            // console.log("capture_error","method not supported",details.method)
             // we only handle GET method
             return false
         }
         if (!Configs.getLatestConfig().autoCaptureLinks) {
+            // console.log("capture_error","auto capture disabled")
             return false
         }
         if (!inRange(details.statusCode, 200, 299)) {
+            // console.log("capture_error","not success",details.statusCode)
             return false
         }
         if (this.isWebPageComponents(details)) {
+            // console.log("capture_error","is Web component")
             return false
         }
         let fileName = this.getFileFromHeaders(details.responseHeaders)
@@ -109,10 +114,12 @@ export abstract class DownloadLinkInterceptor {
             fileName = this.getFileFromUrl(details.url)
         }
         if (fileName == null) {
+            // console.log("capture_error","filename isNull")
             return false
         }
         const ext = this.getFileExtension(fileName)
         if (!this.isInRegisteredFileFormats(ext)) {
+            // console.log("capture_error",`extension is not registered`,ext)
             return false
         }
         return {

@@ -1,0 +1,110 @@
+{
+  "selection_popup_download_selected": {
+    "message": "Baixar selecionado"
+  },
+  "popup_alert_no_link_detected": {
+    "message": "Nenhum link detectado"
+  },
+  "popup_alert_nothing_selected": {
+    "message": "Por favor, primeiro selecione uma seção"
+  },
+  "context_menu_download_with_abdm": {
+    "message": "Baixe com AB DM"
+  },
+  "context_menu_download_selected_links_with_abdm": {
+    "message": "Baixe os links selecionados com a AB DM"
+  },
+  "browser_action_popup_title": {
+    "message": "Configurações rápidas do AB DM"
+  },
+  "option_ui_title": {
+    "message": "Extensão AB Download Manager"
+  },
+  "connection_connected": {
+    "message": "Conectado"
+  },
+  "connection_not_connected": {
+    "message": "Não conectado"
+  },
+  "connection_checking": {
+    "message": "Verificação"
+  },
+  "config_auto_capture_links": {
+    "message": "Links de captura automática"
+  },
+  "config_auto_capture_links_description": {
+    "message": "Quando você clica no link em seu navegador, o link será capturado automaticamente para download pelo aplicativo"
+  },
+  "config_auto_capture_links_file_extensions_reset_to_default": {
+    "message": "Redefinir para o padrão"
+  },
+  "config_auto_capture_links_file_extensions_description": {
+    "message": "Digite cada extensão de arquivo que você deseja capturar e pressione Enter"
+  },
+  "config_show_popups": {
+    "message": "Mostrar pop-ups"
+  },
+  "config_show_popups_description": {
+    "message": "Mostrar pop-up em seleções que possuem links"
+  },
+  "config_port": {
+    "message": "Porta"
+  },
+  "config_port_description": {
+    "message": "Certifique-se de que esta porta e o valor no aplicativo sejam os mesmos, caso contrário, esta extensão não funcionará corretamente"
+  },
+  "config_port_connection_success": {
+    "message": "Êxito\nPorta ($port$) Está conectada",
+    "placeholders": {
+      "port": {
+        "content": "$1",
+        "example": "15151"
+      }
+    }
+  },
+  "config_port_connection_fail": {
+    "message": "Fracasso\nPorta ($port$) não conectada",
+    "placeholders": {
+      "port": {
+        "content": "$1",
+        "example": "15151"
+      }
+    }
+  },
+  "config_send_cookies": {
+    "message": "Enviar cookies"
+  },
+  "config_send_cookies_descrption": {
+    "message": "Nota: NÃO Marque isso se você estiver em um ambiente não confiável"
+  },
+  "browser_action_more_settings": {
+    "message": "Mais configurações"
+  },
+  "connection_error_api_error": {
+    "message": "Há um problema com a API do aplicativo, certifique-se de atualizar o aplicativo e a extensão para a versão mais recente"
+  },
+  "connection_error_network_error": {
+    "message": "Não é possível conectar ao aplicativo, certifique-se de que o aplicativo esteja instalado e em execução e também que a integração do navegador esteja ativada nas configurações do aplicativo"
+  },
+  "settings": {
+    "message": "Configurações"
+  },
+  "test": {
+    "message": "Teste"
+  },
+  "note_about_app_must_be_installed_first": {
+    "message": "Para que esta extensão funcione corretamente,Certifique-se de que o AB Download Manager esteja instalado, caso não..."
+  },
+  "download_abdm_app": {
+    "message": "Baixe o aplicativo"
+  },
+  "project_website": {
+    "message": "Site do Projeto"
+  },
+  "support_by_rating": {
+    "message": "Se você gosta deste trabalho, não se esqueça de me apoiar com seus comentários / avaliações e também compartilhá-lo com seus amigos"
+  },
+  "project_source_code": {
+    "message": "Código-fonte do projeto"
+  }
+}

@@ -1,5 +1,4 @@
 import React, {ReactNode} from "react";
-import ReactDom from "react-dom";
 import "~/assets/css/styles.css"
 import {BaseViewModel, useViewModel} from "~/base/BaseViewModel";
 import {action, makeObservable, observable} from "mobx";
@@ -7,8 +6,12 @@ import {observer} from "mobx-react-lite"
 import {run} from "~/utils/ScopeFunctions";
 import * as Configs from "~/configs/Config";
 import browser from "webextension-polyfill";
-import * as backend from "~/backend/Backend"
 import {AppIcon, SettingsIcon} from "~/components/ReactIcons";
+import {sendMessage} from "webext-bridge/popup";
+import {DefinedCommands} from "~/message/Commands";
+import {defineExtensionEntry} from "~/utils/DefineExtensionEntry";
+import {createRoot} from "react-dom/client";
+import BrowserActionEntryType from "~/utils/EntryPointTypes/BrowserAction/BrowserActionEntryType";
 
 class BrowserActionViewModel extends BaseViewModel {
     private readonly keys: string[]
@@ -28,9 +31,15 @@ class BrowserActionViewModel extends BaseViewModel {
         Configs.onChanged.addEventListener((config) => {
             this.autoCaptureLinks = config.autoCaptureLinks
             this.popupEnabled = config.popupEnabled
+            this.silentAddDownload = config.silentAddDownload
         })
         run(async () => {
-            this.setCanReachable(await backend.ping())
+            const isAppReachable = await sendMessage(
+                DefinedCommands.IS_APP_REACHABLE,
+                undefined,
+                "background",
+            )
+            this.setCanReachable(isAppReachable)
         })
     }
 
@@ -38,6 +47,8 @@ class BrowserActionViewModel extends BaseViewModel {
     popupEnabled!: boolean
     @observable
     autoCaptureLinks!: boolean
+    @observable
+    silentAddDownload!: boolean
 
     @observable
     canReachable: boolean | null = null
@@ -53,6 +64,10 @@ class BrowserActionViewModel extends BaseViewModel {
 
     setPopupEnabled(value: boolean) {
         Configs.setConfigItem("popupEnabled", value)
+    }
+
+    setSilentAddDownload(value: boolean) {
+        Configs.setConfigItem("silentAddDownload", value)
     }
 
 }
@@ -77,23 +92,22 @@ function Header(
     }
 ) {
     const reachable = props.canReachable
-    let status =run(()=>{
-        const commonStyles="text-sm "
+    let status = run(() => {
+        const commonStyles = "text-sm "
         if (reachable === true) {
-            return <div className={commonStyles+"text-green-500"}>
+            return <div className={commonStyles + "text-green-500"}>
                 {browser.i18n.getMessage("connection_connected")}
             </div>
         } else if (reachable === false) {
-            return <div className={commonStyles+"text-red-500"}>
+            return <div className={commonStyles + "text-red-500"}>
                 {browser.i18n.getMessage("connection_not_connected")}
             </div>
         } else {
-            return <div className={commonStyles+""}>
+            return <div className={commonStyles + ""}>
                 {browser.i18n.getMessage("connection_checking")}...
             </div>
         }
     })
-
 
 
     return <div className="p-4 bg-base-200 flex flex-row items-center">
@@ -115,6 +129,7 @@ const BrowserActionUi: React.FC<{
         <div className="bg-base-200 shadow">
             <AutoCaptureSection enabled={vm.autoCaptureLinks} toggle={(v) => vm.setAutoCaptureLinks(v)}/>
             <EnableSection enabled={vm.popupEnabled} toggle={(v) => vm.setPopupEnabled(v)}/>
+            <SilentAddDownload enabled={vm.silentAddDownload} toggle={(v) => vm.setSilentAddDownload(v)}/>
             <MoreSettings/>
         </div>
     </div>
@@ -163,6 +178,28 @@ function EnableSection(
     />
 }
 
+function SilentAddDownload(
+    props: {
+        enabled: boolean,
+        toggle: (v: boolean) => void
+    }
+) {
+    return <OptionItem
+        left={
+            <div>{browser.i18n.getMessage("config_silent_add_download")}</div>
+        }
+        onClick={
+            () => props.toggle(!props.enabled)
+        }
+        right={
+            <input
+                checked={props.enabled}
+                type="checkbox"
+                className="checkbox"/>
+        }
+    />
+}
+
 function AutoCaptureSection(
     props: {
         enabled: boolean,
@@ -184,12 +221,12 @@ function AutoCaptureSection(
 }
 
 
-run(async () => {
-    await Configs.boot()
-    const vm = new BrowserActionViewModel(Configs.getLatestConfig())
-    const container = document.getElementById("app")!
-    ReactDom.render(
-        <BrowserActionUi vm={vm}/>,
-        container,
-    )
-})
+export default defineExtensionEntry()
+    .withType(BrowserActionEntryType)
+    .withInit(async (context) => {
+        const vm = new BrowserActionViewModel(context.getLatestConfig())
+        const container = document.getElementById("app")!
+        createRoot(container).render(
+            <BrowserActionUi vm={vm}/>,
+        )
+    })

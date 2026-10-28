@@ -1,43 +1,59 @@
 import {initializeOptions} from "~/contextmenus/ContextMenus";
 import * as backend from "~/backend/Backend"
-import {run} from "~/utils/ScopeFunctions";
+import * as Backend from "~/backend/Backend"
 import {redirectDownloadLinksToMe} from "~/linkgrabber/LinkGrabber";
-import * as Configs from "~/configs/Config";
 import {onMessage} from "webext-bridge/background";
 import {addDownload, getHeadersForUrls} from "~/background/actions";
-import {Disposable} from "~/utils/disposable";
 import {keepListeningToEvents} from "~/utils/extension-api";
 import {IS_MV3} from "~/utils/ManifestUtil";
+import {setHoldingKey} from "~/background/BackgroundSharedState";
+import {DefinedCommands} from "~/message/Commands";
+import {defineExtensionEntry} from "~/utils/DefineExtensionEntry";
+import platformInfoProvider from "~/utils/platform/InitPlatformFromBackground";
+import BackgroundEntryType from "~/utils/EntryPointTypes/background/BackgroundEntryType";
 
 function receiveMessageFromContentScripts() {
-    onMessage("add_download",async (msg)=>{
+    onMessage(DefinedCommands.ADD_DOWNLOAD, async (msg) => {
         return await addDownload(msg.data)
     })
-    onMessage("test_port",async (msg)=>{
-        return await backend.ping(msg.data)
+    onMessage(DefinedCommands.TEST_HTTP_PORT, async (msg) => {
+        return await backend.httpPing(msg.data)
     })
-    onMessage("show_log",(msg)=>{
+    onMessage(DefinedCommands.TEST_NATIVE_MESSAGING, async (msg) => {
+        return await backend.nativeMessagingPing()
+    })
+    onMessage(DefinedCommands.IS_APP_REACHABLE, async (msg) => {
+        return await backend.isAppReachable()
+    })
+    onMessage(DefinedCommands.SHOW_LOG, (msg) => {
         console.log(...msg.data)
     })
-    onMessage("get_headers",async (msg)=>{
+    onMessage(DefinedCommands.GET_HEADERS, async (msg) => {
         return await getHeadersForUrls(msg.data)
+    })
+    onMessage(DefinedCommands.SET_HOLDING_KEY, async (msg) => {
+        setHoldingKey(msg.data)
+    })
+    onMessage(DefinedCommands.GET_PLATFORM, async () => {
+        return await platformInfoProvider.getPlatformInfo()
     })
 }
 
-run(async () => {
-    const disposable= new Disposable()
-    try {
-        if (IS_MV3){
-            disposable.add(keepListeningToEvents())
+export default defineExtensionEntry()
+    .withType(BackgroundEntryType)
+    .withInit(async (ctx) => {
+        const disposable = ctx.getDisposable()
+        try {
+            if (IS_MV3) {
+                disposable.add(keepListeningToEvents())
+            }
+            await Backend.boot()
+            await initializeOptions()
+            redirectDownloadLinksToMe()
+            receiveMessageFromContentScripts()
+            console.log("ab dm extension loaded successfully")
+        } catch (e) {
+            console.log("extension loading fail", e)
+            throw e
         }
-        await Configs.boot()
-        await initializeOptions()
-        redirectDownloadLinksToMe()
-        receiveMessageFromContentScripts()
-        console.log("ab dm extension loaded successfully")
-    } catch (e) {
-        console.log("extension loading fail", e)
-        // dispose resources if we can't serve the user well
-        disposable.dispose()
-    }
-})
+    })
